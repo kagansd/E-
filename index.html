@@ -8,16 +8,17 @@
     <style>
         html, body {
             margin: 0;
+            padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: black;
+            background: #000000;
         }
 
         canvas {
             display: block;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -27,6 +28,7 @@
 <canvas id="canvas"></canvas>
 
 <script>
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -36,9 +38,13 @@ function resize() {
 }
 
 resize();
+
 window.addEventListener("resize", resize);
 
+
+// ❤️ Kalp matematiği
 function heart(t) {
+
     const x = 16 * Math.pow(Math.sin(t), 3);
 
     const y =
@@ -47,78 +53,164 @@ function heart(t) {
         - 2 * Math.cos(3 * t)
         - Math.cos(4 * t);
 
-    return { x, y };
+    return {
+        x: x,
+        y: y
+    };
 }
+
 
 let progress = 0;
 
+
 function draw() {
 
+    // EKRANI TAMAMEN TEMİZLE
+    // Böylece eski kırmızı çizgiler kalmaz.
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
     // Siyah arka plan
-    ctx.fillStyle = "rgba(0, 0, 0, 0.18)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#000000";
 
-    const scale = Math.min(canvas.width, canvas.height) / 45;
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
 
+    const scale =
+        Math.min(
+            canvas.width,
+            canvas.height
+        ) / 45;
+
+
+    const centerX =
+        canvas.width / 2;
+
+    const centerY =
+        canvas.height / 2;
+
+
+    // Çizgiler
     for (let i = 0; i < 180; i++) {
 
-        if (i > progress) continue;
+        if (i > progress) {
+            continue;
+        }
 
-        const a = (Math.PI * 2 * i) / 180;
 
-        const h = heart(a);
+        const angle =
+            (Math.PI * 2 * i) / 180;
 
-        const hx = cx + h.x * scale;
-        const hy = cy - h.y * scale;
 
+        const h =
+            heart(angle);
+
+
+        // Kalbin üzerindeki nokta
+        const heartX =
+            centerX + h.x * scale;
+
+        const heartY =
+            centerY - h.y * scale;
+
+
+        // Dış noktayı belirle
         const length =
-            1.25 + 0.45 * Math.sin(i * 0.15);
+            1.25 +
+            0.45 *
+            Math.sin(i * 0.15);
 
-        const sx = cx + h.x * scale * length;
-        const sy = cy - h.y * scale * length;
 
-        // 🩵 AÇIK MAVİ GRADIENT
-        const gradient = ctx.createLinearGradient(
-            sx, sy, hx, hy
-        );
+        const startX =
+            centerX +
+            h.x *
+            scale *
+            length;
+
+
+        const startY =
+            centerY -
+            h.y *
+            scale *
+            length;
+
+
+        // 🩵 SADECE MAVİ RENKLER
+        const gradient =
+            ctx.createLinearGradient(
+                startX,
+                startY,
+                heartX,
+                heartY
+            );
+
 
         gradient.addColorStop(
             0,
-            "rgba(80, 180, 255, 0.05)"
+            "rgba(40, 140, 255, 0.15)"
         );
+
 
         gradient.addColorStop(
             0.5,
-            "rgba(100, 200, 255, 0.65)"
+            "rgba(80, 190, 255, 0.7)"
         );
+
 
         gradient.addColorStop(
             1,
-            "rgba(180, 240, 255, 1)"
+            "rgba(190, 245, 255, 1)"
         );
 
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 1.2;
+
+        ctx.strokeStyle =
+            gradient;
+
+
+        ctx.lineWidth = 1.3;
+
 
         ctx.beginPath();
-        ctx.moveTo(sx, sy);
-        ctx.lineTo(hx, hy);
+
+        ctx.moveTo(
+            startX,
+            startY
+        );
+
+        ctx.lineTo(
+            heartX,
+            heartY
+        );
+
         ctx.stroke();
     }
 
+
+    // Çizim animasyonu
     progress += 0.8;
+
 
     if (progress > 180) {
         progress = 180;
     }
 
+
     requestAnimationFrame(draw);
 }
 
+
 draw();
+
 </script>
 
 </body>
