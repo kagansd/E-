@@ -1,49 +1,109 @@
-import turtle
-import math
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>❤️</title>
 
-screen = turtle.Screen()
-screen.setup(800, 800)
-screen.bgcolor("black")
-screen.tracer(0)
+<style>
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: black;
+    }
 
-t = turtle.Turtle()
-t.hideturtle()
-t.speed(0)
-t.width(2)
+    canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+    }
+</style>
+</head>
 
-def heart(a):
-    x = 16 * math.sin(a)**3
-    y = (
-        13 * math.cos(a)
-        - 5 * math.cos(2*a)
-        - 2 * math.cos(3*a)
-        - math.cos(4*a)
-    )
-    return x, y
+<body>
 
-N = 180
-SCALE = 12
+<canvas id="canvas"></canvas>
 
-for i in range(N):
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-    a = 2 * math.pi * i / N
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
 
-    hx, hy = heart(a)
-    hx *= SCALE
-    hy *= SCALE
+resize();
+window.addEventListener("resize", resize);
 
-    # Her çizginin uzunluğu biraz farklı
-    length = 1.25 + 0.45 * math.sin(i * 0.15)
+function heart(t) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y =
+        13 * Math.cos(t)
+        - 5 * Math.cos(2 * t)
+        - 2 * Math.cos(3 * t)
+        - Math.cos(4 * t);
 
-    sx = hx * length
-    sy = hy * length
+    return {x, y};
+}
 
-    t.penup()
-    t.goto(sx, sy)
-    t.pendown()
+let progress = 0;
 
-    # İçeri doğru çiz
-    t.goto(hx, hy)
+function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-screen.update()
-turtle.done()
+    const scale = Math.min(canvas.width, canvas.height) / 45;
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    for (let i = 0; i < 180; i++) {
+
+        if (i > progress) continue;
+
+        const a = (Math.PI * 2 * i) / 180;
+
+        const h = heart(a);
+
+        const hx = cx + h.x * scale;
+        const hy = cy - h.y * scale;
+
+        const length =
+            1.25 + 0.45 * Math.sin(i * 0.15);
+
+        const sx = cx + h.x * scale * length;
+        const sy = cy - h.y * scale * length;
+
+        const gradient = ctx.createLinearGradient(
+            sx, sy, hx, hy
+        );
+
+        gradient.addColorStop(0, "rgba(80, 0, 0, 0.1)");
+        gradient.addColorStop(0.5, "rgba(180, 20, 20, 0.6)");
+        gradient.addColorStop(1, "rgba(255, 40, 40, 1)");
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(hx, hy);
+        ctx.stroke();
+    }
+
+    progress += 0.8;
+
+    if (progress > 180) {
+        progress = 180;
+    }
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+</body>
+</html>
