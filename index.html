@@ -1,96 +1,49 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+import turtle
+import math
 
-    <title>⭐</title>
+screen = turtle.Screen()
+screen.setup(800, 800)
+screen.bgcolor("black")
+screen.tracer(0)
 
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            background: #fff4b8;
+t = turtle.Turtle()
+t.hideturtle()
+t.speed(0)
+t.width(2)
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+def heart(a):
+    x = 16 * math.sin(a)**3
+    y = (
+        13 * math.cos(a)
+        - 5 * math.cos(2*a)
+        - 2 * math.cos(3*a)
+        - math.cos(4*a)
+    )
+    return x, y
 
-            overflow: hidden;
-        }
+N = 180
+SCALE = 12
 
-        svg {
-            width: 350px;
-            height: 350px;
-        }
+for i in range(N):
 
-        /* Yıldızın çizilmesi */
-        .yildiz {
-            fill: none;
-            stroke: #f5b400;
-            stroke-width: 6;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+    a = 2 * math.pi * i / N
 
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
+    hx, hy = heart(a)
+    hx *= SCALE
+    hy *= SCALE
 
-            animation: ciz 3s ease forwards;
-        }
+    # Her çizginin uzunluğu biraz farklı
+    length = 1.25 + 0.45 * math.sin(i * 0.15)
 
-        /* E harfi */
-        .harf {
-            font-family: Arial, sans-serif;
-            font-size: 55px;
-            font-weight: bold;
-            fill: #f5b400;
-            text-anchor: middle;
-            dominant-baseline: middle;
+    sx = hx * length
+    sy = hy * length
 
-            opacity: 0;
-            animation: gorun 1s ease forwards;
-            animation-delay: 3s;
-        }
+    t.penup()
+    t.goto(sx, sy)
+    t.pendown()
 
-        @keyframes ciz {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
+    # İçeri doğru çiz
+    t.goto(hx, hy)
 
-        @keyframes gorun {
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<svg viewBox="0 0 350 350">
-
-    <!-- Yıldız -->
-    <polygon
-        class="yildiz"
-        points="
-        175,35
-        207,125
-        305,125
-        226,182
-        256,275
-        175,220
-        94,275
-        124,182
-        45,125
-        143,125
-        "
-    />
-
-    <!-- Yıldızın içindeki E -->
-    <text class="harf" x="175" y="155">E</text>
-
-</svg>
-
-</body>
-</html>
+screen.update()
+turtle.done()
