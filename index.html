@@ -11,31 +11,40 @@
             margin: 0;
             height: 100vh;
             background: #ffe6f0;
-
             display: flex;
             justify-content: center;
             align-items: center;
-
             overflow: hidden;
         }
 
         svg {
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
         }
 
         .kalp {
             fill: none;
             stroke: red;
             stroke-width: 5;
-
             stroke-linecap: round;
             stroke-linejoin: round;
-
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
-
             animation: ciz 3s ease forwards;
+        }
+
+        .yildiz {
+            fill: gold;
+            stroke: #d89b00;
+            stroke-width: 3;
+        }
+
+        .harf {
+            font-size: 38px;
+            font-weight: bold;
+            fill: white;
+            text-anchor: middle;
+            dominant-baseline: middle;
         }
 
         @keyframes ciz {
@@ -48,18 +57,30 @@
 
 <body>
 
-    <svg viewBox="0 0 300 300">
+<svg viewBox="0 0 350 350">
 
-        <path
-            class="kalp"
-            d="M150 250
-               C130 230 50 180 50 110
-               C50 50 120 40 150 90
-               C180 40 250 50 250 110
-               C250 180 170 230 150 250 Z"
-        />
+    <!-- Çizilen kalp -->
+    <path
+        class="kalp"
+        d="M175 290
+           C150 265 55 205 55 125
+           C55 55 140 45 175 105
+           C210 45 295 55 295 125
+           C295 205 200 265 175 290 Z"
+    />
 
-    </svg>
+    <!-- Yıldız -->
+    <polygon
+        class="yildiz"
+        points="175,115 185,140 212,140 190,157
+                198,184 175,168 152,184 160,157
+                138,140 165,140"
+    />
+
+    <!-- Yıldızın içindeki E -->
+    <text class="harf" x="175" y="153">E</text>
+
+</svg>
 
 </body>
 </html>
